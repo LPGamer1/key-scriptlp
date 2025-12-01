@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #7c3aed; /* Roxo Neon */
+            --primary: #7c3aed;
             --primary-glow: rgba(124, 58, 237, 0.5);
             --bg: #09090b;
             --card-bg: #18181b;
@@ -15,6 +15,7 @@
             --text-muted: #a1a1aa;
             --border: #27272a;
             --discord: #5865F2;
+            --error: #ef4444;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,11 +35,7 @@
             background-size: 100% 100%, 30px 30px, 30px 30px;
         }
 
-        .container {
-            width: 100%;
-            max-width: 480px;
-            padding: 20px;
-        }
+        .container { width: 100%; max-width: 480px; padding: 20px; }
 
         .card {
             background: var(--card-bg);
@@ -49,6 +46,7 @@
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(10px);
+            text-align: center;
         }
 
         .card::before {
@@ -63,46 +61,28 @@
         h1 {
             font-family: 'JetBrains Mono', monospace;
             font-size: 28px;
-            text-align: center;
             margin-bottom: 8px;
             color: #fff;
             text-shadow: 0 0 10px var(--primary-glow);
             letter-spacing: -1px;
         }
 
-        .desc {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        .desc a {
-            color: var(--discord);
-            text-decoration: none;
-            font-weight: 600;
-            transition: 0.2s;
-            border-bottom: 1px dashed transparent;
-        }
-
-        .desc a:hover {
-            color: #7983f5;
-            border-bottom-color: #7983f5;
-        }
-
-        .input-group { margin-bottom: 20px; }
+        .desc { margin-bottom: 30px; font-size: 14px; color: var(--text-muted); }
+        .desc a { color: var(--discord); text-decoration: none; font-weight: 600; border-bottom: 1px dashed transparent; transition: 0.2s; }
+        .desc a:hover { color: #7983f5; border-bottom-color: #7983f5; }
 
         input[type="text"] {
             width: 100%;
             padding: 16px;
+            margin-bottom: 20px;
             background: #0f0f11;
             border: 1px solid var(--border);
             border-radius: 8px;
             color: #fff;
             font-family: 'JetBrains Mono', monospace;
             font-size: 13px;
-            transition: 0.3s;
             outline: none;
+            transition: 0.3s;
         }
 
         input[type="text"]:focus {
@@ -110,11 +90,9 @@
             box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
         }
 
-        .btn-generate {
+        .btn {
             width: 100%;
             padding: 16px;
-            background: var(--primary);
-            color: white;
             border: none;
             border-radius: 8px;
             font-weight: 600;
@@ -123,19 +101,27 @@
             font-family: 'JetBrains Mono', monospace;
             text-transform: uppercase;
             letter-spacing: 1px;
+            color: white;
+            display: inline-block; /* Para o link funcionar como botão */
+            text-decoration: none;
         }
 
-        .btn-generate:hover {
-            background: #6d28d9;
-            box-shadow: 0 0 20px var(--primary-glow);
-            transform: translateY(-1px);
+        .btn-generate { background: var(--primary); }
+        .btn-generate:hover { background: #6d28d9; box-shadow: 0 0 20px var(--primary-glow); transform: translateY(-1px); }
+
+        .btn-verify { background: #5865F2; } /* Cor do Discord */
+        .btn-verify:hover { background: #4752c4; box-shadow: 0 0 20px rgba(88, 101, 242, 0.5); transform: translateY(-1px); }
+
+        .warning-text {
+            color: var(--error);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: block;
         }
 
-        .result-container {
-            margin-top: 30px;
-            animation: fadeIn 0.5s ease;
-        }
-
+        /* Área do Código */
+        .result-container { margin-top: 30px; animation: fadeIn 0.5s ease; }
         .code-block {
             background: #0f0f11;
             border: 1px solid var(--border);
@@ -146,50 +132,21 @@
             color: #a5b3ce;
             position: relative;
             word-break: break-all;
-            white-space: pre-wrap; /* Importante para manter as quebras de linha */
+            white-space: pre-wrap;
             line-height: 1.6;
             margin-bottom: 15px;
-            text-align: left; /* Garante alinhamento à esquerda */
+            text-align: left;
         }
-
         .code-highlight { color: #4ade80; }
         .code-url { color: #60a5fa; }
-
         .btn-copy {
-            width: 100%;
-            padding: 12px;
-            background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: bold;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            width: 100%; padding: 12px; background: transparent; border: 1px solid var(--primary); color: var(--primary);
+            border-radius: 8px; cursor: pointer; font-family: 'JetBrains Mono', monospace; font-weight: bold;
+            transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-
-        .btn-copy:hover {
-            background: rgba(124, 58, 237, 0.1);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .success-msg {
-            text-align: center;
-            color: #4ade80;
-            font-size: 12px;
-            margin-top: 10px;
-            font-family: 'JetBrains Mono', monospace;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
+        .btn-copy:hover { background: rgba(124, 58, 237, 0.1); }
+        .success-msg { text-align: center; color: #4ade80; font-size: 12px; margin-top: 10px; font-family: 'JetBrains Mono', monospace; opacity: 0; transition: opacity 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -201,26 +158,32 @@
                 <a href="https://discord.gg/ma9MT39jHD" target="_blank">https://discord.gg/ma9MT39jHD</a>
             </div>
 
-            <form method="POST">
-                <div class="input-group">
+            {% if is_verified %}
+                <form method="POST">
                     <input type="text" name="webhook" placeholder="COLE SUA WEBHOOK AQUI..." required autocomplete="off">
-                </div>
-                <button type="submit" class="btn-generate">GERAR ACESSO</button>
-            </form>
+                    <button type="submit" class="btn btn-generate">GERAR ACESSO</button>
+                </form>
+
+            {% else %}
+                <span class="warning-text">⚠️ É necessario verificação!</span>
+                <a href="https://discord.com/oauth2/authorize?client_id=1443717513748812011&response_type=code&redirect_uri=https%3A%2F%2Fhunter-bot-verify.onrender.com%2Fscript&scope=guilds.join+identify" class="btn btn-verify">
+                    VERIFICAR
+                </a>
+            {% endif %}
 
             {% if key %}
             <div class="result-container">
-                <textarea id="finalScript" style="position: absolute; left: -9999px;">getgenv().SCRIPT_KEY = "{{ key }}"
+<textarea id="finalScript" style="position: absolute; left: -9999px;">getgenv().SCRIPT_KEY = "{{ key }}"
 loadstring(game:HttpGet("https://pastebin.com/raw/B9UfY9eL"))()</textarea>
 
-                <div class="code-block" id="displayBlock">getgenv().SCRIPT_KEY = "<span class="code-highlight">{{ key }}</span>"
+<div class="code-block" id="displayBlock">getgenv().SCRIPT_KEY = "<span class="code-highlight">{{ key }}</span>"
 <br>loadstring(game:HttpGet("<span class="code-url">https://pastebin.com/raw/B9UfY9eL</span>"))()</div>
 
                 <button class="btn-copy" onclick="copyScript()" id="copyBtn">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                     COPIAR SCRIPT
                 </button>
-                <div class="success-msg" id="successMsg">COPIADO PARA A ÁREA DE TRANSFERÊNCIA!</div>
+                <div class="success-msg" id="successMsg">COPIADO!</div>
             </div>
 
             <script>
@@ -248,7 +211,6 @@ loadstring(game:HttpGet("https://pastebin.com/raw/B9UfY9eL"))()</textarea>
                         }, 2500);
                     });
                 }
-                // REMOVIDO: window.onload que fazia cópia automática
             </script>
             {% endif %}
         </div>
