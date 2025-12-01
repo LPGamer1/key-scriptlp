@@ -51,7 +51,6 @@
             backdrop-filter: blur(10px);
         }
 
-        /* Efeito de brilho no topo */
         .card::before {
             content: '';
             position: absolute;
@@ -132,7 +131,6 @@
             transform: translateY(-1px);
         }
 
-        /* Área do Código */
         .result-container {
             margin-top: 30px;
             animation: fadeIn 0.5s ease;
@@ -148,13 +146,14 @@
             color: #a5b3ce;
             position: relative;
             word-break: break-all;
-            white-space: pre-wrap;
+            white-space: pre-wrap; /* Importante para manter as quebras de linha */
             line-height: 1.6;
             margin-bottom: 15px;
+            text-align: left; /* Garante alinhamento à esquerda */
         }
 
-        .code-highlight { color: #4ade80; } /* Verde para a Key */
-        .code-url { color: #60a5fa; } /* Azul para url */
+        .code-highlight { color: #4ade80; }
+        .code-url { color: #60a5fa; }
 
         .btn-copy {
             width: 100%;
@@ -214,10 +213,8 @@
                 <textarea id="finalScript" style="position: absolute; left: -9999px;">getgenv().SCRIPT_KEY = "{{ key }}"
 loadstring(game:HttpGet("https://pastebin.com/raw/B9UfY9eL"))()</textarea>
 
-                <div class="code-block" id="displayBlock">
-                    getgenv().SCRIPT_KEY = "<span class="code-highlight">{{ key }}</span>"
-<br>loadstring(game:HttpGet("<span class="code-url">https://pastebin.com/raw/B9UfY9eL</span>"))()
-                </div>
+                <div class="code-block" id="displayBlock">getgenv().SCRIPT_KEY = "<span class="code-highlight">{{ key }}</span>"
+<br>loadstring(game:HttpGet("<span class="code-url">https://pastebin.com/raw/B9UfY9eL</span>"))()</div>
 
                 <button class="btn-copy" onclick="copyScript()" id="copyBtn">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
@@ -227,7 +224,6 @@ loadstring(game:HttpGet("https://pastebin.com/raw/B9UfY9eL"))()</textarea>
             </div>
 
             <script>
-                // Função de Copiar
                 function copyScript() {
                     var copyText = document.getElementById("finalScript");
                     copyText.select();
@@ -252,13 +248,7 @@ loadstring(game:HttpGet("https://pastebin.com/raw/B9UfY9eL"))()</textarea>
                         }, 2500);
                     });
                 }
-
-                // Tenta copiar automaticamente ao carregar
-                window.onload = function() {
-                    setTimeout(function() {
-                        copyScript();
-                    }, 500);
-                };
+                // REMOVIDO: window.onload que fazia cópia automática
             </script>
             {% endif %}
         </div>
