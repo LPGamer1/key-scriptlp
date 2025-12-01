@@ -10,7 +10,8 @@ app = Flask(__name__)
 # Conexão com MongoDB (Pega a URL das variáveis de ambiente do Render)
 MONGO_URI = os.getenv('MONGO_URI')
 client = MongoClient(MONGO_URI)
-db = client.get_default_database()
+# Conecta ao banco de dados chamado 'Scriptkey'
+db = client['Scriptkey']
 keys_collection = db.keys
 
 def generate_segment():
