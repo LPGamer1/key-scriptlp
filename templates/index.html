@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerador de Keys LP</title>
+    <style>
+        body { background-color: #1a1a1a; color: white; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: #2a2a2a; padding: 40px; border-radius: 10px; text-align: center; border: 1px solid #444; }
+        input { padding: 10px; width: 300px; margin-bottom: 20px; background: #333; border: 1px solid #555; color: white; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; }
+        .key-display { margin-top: 20px; font-size: 24px; color: #00ff00; border: 1px dashed #00ff00; padding: 10px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Gerador de Key LP</h2>
+        <form method="POST">
+            <input type="text" name="webhook" placeholder="Cole sua Webhook do Discord aqui" required>
+            <br>
+            <button type="submit">GERAR KEY</button>
+        </form>
+        {% if key %}
+        <div class="key-display">
+            SUA KEY: {{ key }}
+        </div>
+        <p>Coloque esta key no script: <code>getgenv().SCRIPT_KEY = "{{ key }}"</code></p>
+        {% endif %}
+    </div>
+</body>
+</html>
