@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Método LP</title>
+    <title>Método LP | Secure Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -15,7 +15,6 @@
             --text-muted: #a1a1aa;
             --border: #27272a;
             --discord: #5865F2;
-            --error: #ef4444;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -90,9 +89,11 @@
             box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
         }
 
-        .btn {
+        .btn-generate {
             width: 100%;
             padding: 16px;
+            background: var(--primary);
+            color: white;
             border: none;
             border-radius: 8px;
             font-weight: 600;
@@ -101,25 +102,15 @@
             font-family: 'JetBrains Mono', monospace;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: white;
-            display: inline-block;
-            text-decoration: none;
         }
 
-        .btn-generate { background: var(--primary); }
-        .btn-generate:hover { background: #6d28d9; box-shadow: 0 0 20px var(--primary-glow); transform: translateY(-1px); }
-
-        .btn-verify { background: #5865F2; } 
-        .btn-verify:hover { background: #4752c4; box-shadow: 0 0 20px rgba(88, 101, 242, 0.5); transform: translateY(-1px); }
-
-        .warning-text {
-            color: var(--error);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-            margin-bottom: 15px;
-            display: block;
+        .btn-generate:hover {
+            background: #6d28d9;
+            box-shadow: 0 0 20px var(--primary-glow);
+            transform: translateY(-1px);
         }
 
+        /* Área do Código */
         .result-container { margin-top: 30px; animation: fadeIn 0.5s ease; }
         .code-block {
             background: #0f0f11;
@@ -157,18 +148,10 @@
                 <a href="https://discord.gg/ma9MT39jHD" target="_blank">https://discord.gg/ma9MT39jHD</a>
             </div>
 
-            {% if is_verified %}
-                <form method="POST">
-                    <input type="text" name="webhook" placeholder="COLE SUA WEBHOOK AQUI..." required autocomplete="off">
-                    <button type="submit" class="btn btn-generate">GERAR ACESSO</button>
-                </form>
-
-            {% else %}
-                <span class="warning-text">⚠️ É necessario verificação!</span>
-                <a href="https://discord.com/oauth2/authorize?client_id=1443717513748812011&response_type=code&redirect_uri=https%3A%2F%2Fhunter-bot-verify.onrender.com%2Fscript&scope=guilds.join+identify" class="btn btn-verify">
-                    VERIFICAR
-                </a>
-            {% endif %}
+            <form method="POST">
+                <input type="text" name="webhook" placeholder="COLE SUA WEBHOOK AQUI..." required autocomplete="off">
+                <button type="submit" class="btn-generate">GERAR ACESSO</button>
+            </form>
 
             {% if key %}
             <div class="result-container">
